@@ -63,10 +63,10 @@ scriptmode = True
 # pathname = os.environ.get('CASAPATH').split()[0]
 
 # The prefix to use for all output files
-prefix = '/data/dleung/DATA/VLA/15B-137/Imaging/J0939_CO10'
+prefix = '/data/dleung/DATA/VLA/15B-137/Imaging/J0939'
 
 # Clean up old files
-os.system('rm -rf '+prefix+'*')
+os.system('rm -rf '+prefix+'.*')    # continuum maps named with underscore
 
 vis = "/data/dleung/DATA/VLA/15B-137/Imaging/3C220.3CAL.ms"
 #=====================================================================
