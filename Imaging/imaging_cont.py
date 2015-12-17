@@ -5,7 +5,7 @@
 # -----                                                                      #
 # - update flow chart                                                        #
 #                                                                            #
-# Use Case Script for SMM J0939+8315                                         #
+# Continuum imaging for SMM J0939+8315                                       #
 #                                                                            #
 # Features Tested:                                                           #
 #    The script illustrates end-to-end processing with CASA                  #
@@ -13,39 +13,30 @@
 #                                                                            #
 #    Filenames will have the <prefix> = 'J0939'                              #
 #                                                                            #
-#      Input Data           Process          Output Data                     #
+#      Input Data          Process          Output Data                      #
 #                                                                            #
 #                                                                            #
-# <prefix>.src.split.ms -->  split --> <prefix>_cont.ms +    #
-#                              |       <prefix>_contL.ms +   #
-#                              |       <prefix>_contU.ms     #
-#                              v                                             #
-#                            clean --> <prefix>.withcont.clean.image +       #
-#                                      <prefix>.withcont.clean.model +       #
-#                                      <prefix>.withcont.clean.residual      #
-#                                                                            #
-#                                                                            #
-#                            clean     -->  <prefix>.clean.image +           #
-#                              |            <prefix>.clean.model +           #
-#                              |            <prefix>.clean.residual          #
-#                              v                                             #
-#                           impbcor     -->  <prefix>.clean.pbcor +          #
-#                                            <prefix>.clean.flux             #
-#                                                                            #
-# <prefix>.clean.image +                                                     #
-# <prefix>.clean.model +  exportfits   -->  <prefix>.clean.fits              #
-# <prefix>.clean.residual      |                                             #
-#                              v                                             #
-#                           imhead     -->  casapy.log                       #
-#                              |                                             #
-#                              v                                             #
-#                           imstat     -->  xstat (parameter)                #
-#                              |                                             #
-#                              v                                             #
+# <prefix>.src.split.ms --> split --> <prefix>_cont.ms +                     #
+#                             |       <prefix>_contL.ms +                    #
+#                             |       <prefix>_contU.ms                      #
+#                             v                                              #
+#                          clean --> <prefix>.cont(,L,U).clean.image +       #
+#                             |      <prefix>.cont(,L,U).clean.model +       #
+#                             |      <prefix>.cont(,L,U).clean.residual      #
+#                             v                                              #
+#                        exportfits  -->  <prefix>.cont(,L,U).clean.fits     #
+#                             |                                              #
+#                             v                                              #
+#                          imhead    -->  casapy.log                         #
+#                             |                                              #
+#                             v                                              #
+#                          imstat    -->  xstat (parameter)                  #
+#                             |                                              #
+#                             v                                              #
 ##############################################################################
 
 '''
-Clean continuum
+Make dirty and clean continuum images
 
 1. LSB+USB
 2. USB
@@ -582,16 +573,3 @@ imhead()
 
 # A summary of the cube will be seen in the logger
 
-
-#====================================================================
-# Apply a primary beam correction
-#
-import glob
-
-path = '/data/dleung/DATA/VLA/15B-137/Imaging/'
-myimages = glob.glob(path+"*clean.image")
-
-rmtables('*.pbcor')
-for image in myimages:
-    impbcor(imagename=image, pbimage=image.replace(
-        '.image', '.flux'), outfile=image.replace('.image', '.pbcor'))

@@ -5,7 +5,7 @@
 # -----                                                                      #
 # - update flow chart                                                        #
 #                                                                            #
-# Use Case Script for SMM J0939+8315                                         #
+# Imaging Script for SMM J0939+8315                                          #
 #                                                                            #
 # Features Tested:                                                           #
 #    The script illustrates end-to-end processing with CASA                  #
@@ -39,12 +39,8 @@
 #                              |            <prefix>.clean.model +           #
 #                              |            <prefix>.clean.residual          #
 #                              v                                             #
-#                           impbcor     -->  <prefix>.clean.pbcor +          #
-#                                            <prefix>.clean.flux             #
-#                                                                            #
-# <prefix>.clean.image +                                                     #
-# <prefix>.clean.model +  exportfits   -->  <prefix>.clean.fits              #
-# <prefix>.clean.residual      |                                             #
+#                         exportfits   -->  <prefix>.clean.fits              #
+#                              |                                             #
 #                              v                                             #
 #                           imhead     -->  casapy.log                       #
 #                              |                                             #
@@ -428,20 +424,6 @@ imview(raster={'file': clnimage,
                contour={'file': clnimage,
                         'levels': [-6,-3,3,4,5,6,7,8,9,12,15,16],
                         'unit': 0.00017}, zoom=3)
-
-
-#====================================================================
-# Apply a primary beam correction
-#
-import glob
-
-path = '/data/dleung/DATA/VLA/15B-137/Imaging/'
-myimages = glob.glob(path+"*clean.image")
-
-rmtables('*.pbcor')
-for image in myimages:
-    impbcor(imagename=image, pbimage=image.replace(
-        '.image', '.flux'), outfile=image.replace('.image', '.pbcor'))
 
 
 #=====================================================================
