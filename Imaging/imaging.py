@@ -160,12 +160,15 @@ imagename = imname
 restfreq = str(freq_CO_J0939)+'GHz'
 freq_lastChan = 35.965      # GHz
 start_velo = (freq_CO_J0939 - freq_lastChan)/freq_CO_J0939 * 3e10/1e5
+specRes = 16.7656            # native spec. res. = 2 MHz
 
 mode = 'velocity'
-nchan = -1
 start = str(start_velo)+'km/s'
-# width = '29km/s'          # ~ 1.5 channels of 2 MHz (native)
-width = '16.7656km/s'       # 1 channel, i.e. highest spec. resolution
+binning = 2         # 29km/s ~ 1.5 channels of native spec. res.
+# nchan = -1        # make the max # of chan. before deciding how many I need
+nchan = 215/binning         # for high freq baseband to span up to 2000km/s
+width = str(binning * specRes) + 'km/s'
+
 #
 spw = ''
 imsize = [256]
@@ -201,10 +204,11 @@ imagename = imname
 
 # Set up the output image cube
 mode = 'velocity'
-nchan = -1
 start = str(start_velo)+'km/s'
-# width = '29km/s'          # ~ 1.5 channels of 2 MHz (native)
-width = '16.7656km/s'       # 1 channel, i.e. highest spec. resolution
+binning = 2         # 29km/s ~ 1.5 channels of native spec. res.
+# nchan = -1        # make the max # of chan. before deciding how many I need
+nchan = 215/binning         # for high freq baseband to span up to 2000km/s
+width = str(binning * specRes) + 'km/s'
 
 gain = 0.1
 imsize = [256]
@@ -316,10 +320,11 @@ imagename = imname
 #
 restfreq = str(freq_CO_J0939)+'GHz'
 mode = 'velocity'
-nchan = -1
 start = str(start_velo)+'km/s'
-# width = '29km/s'          # ~ 1.5 channels of 2 MHz (native)
-width = '16.7656km/s'       # 1 channel, i.e. highest spec. resolution
+binning = 2         # 29km/s ~ 1.5 channels of native spec. res.
+# nchan = -1        # make the max # of chan. before deciding how many I need
+nchan = 215/binning         # for high freq baseband to span up to 2000km/s
+width = str(binning * specRes) + 'km/s'
 #
 spw = ''
 imsize = [256]
@@ -365,10 +370,11 @@ imagename = imname
 
 # Set up the output image cube
 mode = 'velocity'
-nchan = -1
 start = str(start_velo)+'km/s'
-# width = '29km/s'          # ~ 1.5 channels of 2 MHz (native)
-width = '16.7656km/s'       # 1 channel, i.e. highest spec. resolution
+binning = 2         # 29km/s ~ 1.5 channels of native spec. res.
+# nchan = -1        # make the max # of chan. before deciding how many I need
+nchan = 215/binning         # for high freq baseband to span up to 2000km/s
+width = str(binning * specRes) + 'km/s'
 
 gain = 0.1
 imsize = [256]
