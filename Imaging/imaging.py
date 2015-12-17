@@ -1,5 +1,5 @@
 ##############################################################################
-# Last Modified: 16 Dec 2015                                                 #
+# Last Modified: 17 Dec 2015                                                 #
 #                                                                            #
 # TODO:                                                                      #
 # -----                                                                      #
@@ -63,7 +63,7 @@ scriptmode = True
 # pathname = os.environ.get('CASAPATH').split()[0]
 
 # The prefix to use for all output files
-prefix = '/data/dleung/DATA/VLA/15B-137/Imaging/J0939'
+prefix = '/data/dleung/DATA/VLA/15B-137/Imaging/J0939_CO10'
 
 # Clean up old files
 os.system('rm -rf '+prefix+'*')
