@@ -1,0 +1,76 @@
+! MFIT%PAR[01]   3.7866344451904297       0.20055028128874680
+! MFIT%PAR[02]   22.319971084594727        14.526653862655502
+! MFIT%PAR[03]   223.55320739746094        19.466415833902392
+! MFIT%PAR[04]   8.7439984083175659E-002   8.3636095319531589E-002
+
+dev xlandscape white
+set plot landscape
+pen 0 /col 0 /dash 1 /weight 3
+set box 3.6 29 3.6 17
+cle
+cle al
+column x 1 y 2 /file J0939.CO10.bin2.spec
+def double z /like x
+
+def double c
+def double xrangeMax                         ! for plot, unit w.r.t x
+def double xrangeMin
+def double datfr
+def double linefr
+def double dum
+def double z_guess                           ! best_z guess from literature
+
+let c 299792.458
+let xrangeMax 2000
+let xrangeMin -1300
+let datfr 35.78739521                            ! rest/ref freq in data header
+let linefr 115.2721                           ! co1-0 line rest freq
+let z_guess 2.2212
+let dum linefr/(1+z_guess)                       ! nu_obs of CO1-0 source at z_guess in z=0 frame
+
+! let x datfr-(x/c*datfr)
+! let x x*(1+z_guess)
+! let x (((linefr-x)/linefr)*c)                  ! vel. in z_guess frame
+
+limits xrangeMin xrangeMax -2.0 7.0407682          ! x y range
+axis xlow
+
+! let z (x/c*linefr/dum)+z_guess                 ! redshift array
+! axis xup ((linefr-(xrangeMin/c*linefr))/(1+z_guess)) ((linefr-(xrangeMax/c*linefr))/(1+z_guess)) /label P        ! xup observed freq
+axis xup xrangeMin/c*linefr/dum+z_guess xrangeMax/c*linefr/dum+z_guess /label P            ! xup redshift
+axis yleft
+axis yright
+set expand 1.25   ! font size
+draw text -500 5.5 "\\2 CO(\iJ=1-0) (z=2.2212) SMMJ0939" /user     ! to use user specific
+set expand 1
+draw text 0 10 "redshift" /user
+! draw text -1000 165 "\gu\do\db\ds [GHz]" /user
+!draw text 798.31 3.05 "100.0" /user
+!draw text 200.32 3.05 "100.2" /user
+!draw text -397.66 3.05 "100.4" /user
+label "Velocity offset [km/s]" /x
+!label "\gn(obs) [GHz]" /x
+label "Flux density [mJy]" /y
+pen 0 /col 0 /dash 1 /weight 2
+histo /base 0.08 /fill 5
+!histo /base 3.893 /fill 5  ! yellow
+histo /fill 0       ! black line
+!connect
+pen 0 /col 0 /dash 1 /weight 3
+mfit y=&a*Exp(-((x-&b)^2|(2*&c^2)))+&d /metho powell /start 5,0,700,0.1
+! peak, velocity, line width= sigma (FWHM/2.355), continuum amplitude
+! mfit y=&m*x+&b /metho powell /start 25
+curve x mfit%fit      ! plot and fit
+pen 0 /col 0 /dash 3
+let y 0.08    ! dotted line
+connect x y
+pen 0 /col 0 /dash 1
+! axis xlow /label n
+!axis yleft
+!axis yright
+!axis xup 5.2598036 5.329044
+! box n o /abs
+! box  ! draw box
+!
+sic delete SpecCO10_J0939.eps
+hard SpecCO10_J0939.eps /dev eps colo

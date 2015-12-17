@@ -1,0 +1,128 @@
+! Last modfidied: 17 Dec 15
+!
+! Purpose: make pretty channel map with greg
+!
+!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! USER DEFINE
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+define char CubeName*40
+sic\let CubeName = "J0939_cln."
+! delete /var CubeName
+
+def char NewPath*55
+sic\let NewPath = "/Users/admin/Research/3C220.3/VLA_CO10/Imaging/GILDAS/"
+
+say ""
+say ""
+sic DIRECTORY 'NewPath'
+sys "pwd"
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!dev xlandscape white
+!set plot landscape
+cle
+
+!----- set plotting window = box_location -----
+set plot 33 30             ! define scale w.r.t. plot window
+
+set font duplex     ! SIMPLEX
+set expand 1.2
+pen 0 /col 0 /weight 2
+
+!Load color table rainbow4
+lut rainbow4.lut
+
+let noise = 1.2E-04 /new real
+level -3.0*noise 3.0*noise 6.0*noise 9.0*noise 12.0*noise 15.0*noise 18.0*noise
+
+! ---------------- Channel 34 - 54 -----------------------------------
+let NXY_BOX 4 5                                 ! # of panels
+let nimages NXY_BOX[1]*NXY_BOX[2]               ! total # of channels
+let delta 5 /new int                            ! size of panel
+let raise_y 5 /new int                          ! from blc
+let pad_x 5 /new int                            ! for Dec label
+
+let trc delta+pad_x delta*NXY_BOX[1]+raise_y    ! starting box coord (x, y)
+let blc 0+pad_x NXY_BOX[1]*delta-delta+raise_y  ! (x, y)
+let ichan 34 /new int                          ! starting channel
+
+for irow 1 to NXY_BOX[1]
+    for jcol 1 to NXY_BOX[2]
+    exa trc
+    exa blc
+    set box blc[1] trc[1] blc[2] trc[2]        ! box for panel (x, x, y, y);=`let PLOT_POSITION 3 10 3 10`
+
+    say "Load in image from FILE -- "'CubeName'" channel: "'ichan'
+    image 'CubeName' /plane ichan ichan
+    extrema /compute    ! compute the extrema of your image
+    plot /scaling lin -2E-03 2E-03
+    !---- DEFINE THE PLOT AREA -----
+    tickspace 0 0 0 0                        ! use default
+    limits 10 -5.5 -5.5 8 second /rgdata      ! define axes range, zoom
+    ! rgmap /grey 1 2       ! for greyscale map
+    ! rgmap /per            ! contours, assuming the levels are percentages of the max. value
+    rgmap       ! overlay contours
+
+    ! central marker; currently randomly drawn
+    pen 0 /col 0 /weight 2.0
+    draw relocate +2.500 +2.5000-1.0 /USER seconds
+    draw line +2.500 +2.5000+1.0 /USER seconds
+    draw line +2.500 +2.5000 /USER seconds
+    draw line +2.500-1.0 +2.5000 /USER seconds
+    draw line +2.500+1.0 +2.5000 /USER seconds
+
+    let trc[1] trc[1]+delta
+    let blc[1] blc[1]+delta
+    let ichan ichan+1
+
+    if (irow.eq.NXY_BOX[1]).AND.(jcol.eq.1) then
+        box p o in /ABSOLUTE /LABEL 0 /unit s
+        label "R.A. (J2000)" /x
+        label "DEC (J2000)" /y 10
+
+        say "Plot BEAM *** "
+        exa blc
+        pen /def
+        pen /wei 2
+        set angle sec
+        pen 0 /weight 3
+        draw relocate -0.00 -0.000-0.3-1.0 /USER seconds     ! relocate pen
+
+        ellipse G_MAJOR*206265/2 G_MINOR*206265/2 90-G_PA*57.3 /USER  -2.50 -0.000-2.5-1.0 seconds /fill 7
+        ellipse G_MAJOR*206265/2 G_MINOR*206265/2 90-G_PA*57.3 /USER  -2.50 -0.000-2.5-1.0 seconds
+        ellipse G_MAJOR*206265/2 G_MINOR*206265/2 90-G_PA*57.3 /USER  -2.50 -0.000-2.5-1.0 seconds /HATCH 0 45 ! 0.2
+    endif
+    box N N /ABSOLUTE /LABEL 0 /unit s !/u s
+    next
+let trc delta+pad_x trc[2]-delta
+let blc 0+pad_x blc[2]-delta
+! exa trc
+! exa blc
+next
+
+! --- color bar ----
+! w.r.t to whole frame
+set box 0+pad_x delta*NXY_BOX[1]+pad_x+5 raise_y delta*NXY_BOX[1]+raise_y
+set expand 1.0
+WEDGE right
+set expand 1.2
+label "Jy/beam" /Y -47
+
+! ############ PUT THE SOURCE NAME #############
+pen 0 /col 0 /weight 5
+set character 0.9     ! font size
+draw text -3 8.8 "SMMJ0939+8315 Channel Map" 7 /user
+set character 0.6
+
+
+! ############## OUT PUT FILENAME ##############
+sic delete J0939_CO10_chanMap.eps
+hardcopy J0939_CO10_chanMap /device eps color
+! ##############################################
+
+pen 0 /default
+
+say "Back to script directory"
+sic DIRECTORY "/Users/admin/Research/3C220.3/VLA_CO10/Imaging/GILDAS"
