@@ -48,9 +48,6 @@
 #                           imstat     -->  xstat (parameter)                #
 #                              |                                             #
 #                              v                                             #
-#                          immoments   -->  <prefix>.moments.integrated +    #
-#                              |            <prefix>.moments.weighted_coord  #
-#                              v                                             #
 ##############################################################################
 
 import os
@@ -487,93 +484,5 @@ cubestats = imstat()
 # Statistics will printed to the terminal, and the output
 # parameter will contain a dictionary of the statistics
 
-#=====================================================================
-#
-# Get some image moments, do 0th and 1st+2nd separately
-#
-print '--0th ImMoments--'
-default('immoments')
 
-imagename = clnimage
-moments = [0]
-chans = '68,107'
-stokes='I'
-
-# Output root name
-momfile = prefix + '.moments'
-outfile = momfile+'.integrated'
-
-saveinputs('immoments',prefix+'.immoments0.saved')
-
-# Pause script if you are running in scriptmode
-if scriptmode:
-    inp()
-    user_check=raw_input('Return to continue script\n')
-
-immoments()
-#
-#
-#
-print '--1st, 2nd ImMoments--'
-default('immoments')
-
-# higher-O moments, need clipping
-imagename = clnimage
-moments = [1,2]
-stokes='I'
-
-# Need to mask out noisy pixels, 3*sigma
-upperlim = 3 * rms * 1e-3        # Jy
-excludepix = [-100, upperlim]
-
-chans = '68,107'
-
-# Output root name
-momfile = prefix + '.moments'
-outfile = momfile
-
-saveinputs('immoments',prefix+'.immoments12.saved')
-# Pause script if you are running in scriptmode
-if scriptmode:
-    inp()
-    user_check=raw_input('Return to continue script\n')
-
-immoments()
-
-momzeroimage = momfile + '.integrated'
-momoneimage = momfile + '.weighted_coord'
-momtwoimage = momfile + '.weighted_dispersion_coord'
-
-# It will have made the images:
-# --------------------------------------
-# J0939.moments.integrated
-# J0939.moments.weighted_coord
-# J0939.moments.weighted_dispersion_coord
-
-#
-#=====================================================================
-#
-# Get some statistics of the moment images
-#
-print '--Imstat (moments)--'
-default('imstat')
-
-imagename = momzeroimage
-momzerostats = imstat()
-
-imagename = momoneimage
-momonestats = imstat()
-
-imagename = momtwoimage
-momtwostats = imstat()
-#=====================================================================
-#
-# Now view the moments
-#
-if scriptmode:
-    print '--View image (Moments)--'
-    viewer(momzeroimage)
-    print "You can add mom-1 image "+momoneimage
-    print "as a contour plot"
-    user_check=raw_input('Return to continue script\n')
 
