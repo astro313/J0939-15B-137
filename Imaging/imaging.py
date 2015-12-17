@@ -146,95 +146,97 @@ print "Created "+splitms
 #
 #print "The return value for this exportuvfits async task for tm is "+str(myhandle)
 
-#=====================================================================
-#
-# Make dirty image before removing continuum
-#
-print '--Clean (make dirty image) prior to cont. subtraction --'
-default('clean')
+# #=====================================================================
+# #
+# # (for some reason, it doesn't work...) - the resulting cube has emission in all channels
+# # Make dirty image before removing continuum
+# #
+# print '--Clean (make dirty image) prior to cont. subtraction --'
+# default('clean')
 
-# splited source
-vis = splitms
-imname = prefix + '.withcont.dirty'
-os.system('rm -rf '+imname+'*')
-imagename = imname
-#
-#
-freq_CO = 115.2712 # GHz
-z = 2.221
-freq_CO_J0939 = freq_CO / (1+z)
-restfreq = str(freq_CO_J0939)+'GHz'
-freq_lastChan = 35.965      # GHz
-start_velo = (freq_CO_J0939 - freq_lastChan)/freq_CO_J0939 * 3e10/1e5
-specRes = 16.7656            # native spec. res. = 2 MHz
-#
-mode = 'velocity'
-start = str(start_velo)+'km/s'
-binning = 2         # 29km/s ~ 1.5 channels of native spec. res.
-# nchan = -1        # make the max # of chan. before deciding how many I need
-nchan = 215/binning         # for high freq baseband to span up to 2000km/s
-width = str(binning * specRes) + 'km/s'
+# # splited source
+# vis = splitms
+# imname = prefix + '.withcont.dirty'
+# os.system('rm -rf '+imname+'*')
+# imagename = imname
+# #
+# #
+# freq_CO = 115.2712 # GHz
+# z = 2.221
+# freq_CO_J0939 = freq_CO / (1+z)
+# restfreq = str(freq_CO_J0939)+'GHz'
+# freq_lastChan = 35.965      # GHz
+# start_velo = (freq_CO_J0939 - freq_lastChan)/freq_CO_J0939 * 3e10/1e5
+# specRes = 16.7656            # native spec. res. = 2 MHz
+# #
+# mode = 'velocity'
+# start = str(start_velo)+'km/s'
+# binning = 2         # 29km/s ~ 1.5 channels of native spec. res.
+# # nchan = -1        # make the max # of chan. before deciding how many I need
+# nchan = 215/binning         # for high freq baseband to span up to 2000km/s
+# width = str(binning * specRes) + 'km/s'
 
-#
-spw = ''
-imsize = [256]
-cell = [0.75]
-stokes='I'
-niter = 0
-# weighting = 'briggs'
-# robust = 0.5
+# #
+# spw = ''
+# imsize = [256]
+# cell = [0.75]
+# stokes='I'
+# niter = 0
+# # weighting = 'briggs'
+# # robust = 0.5
 
-saveinputs('clean',imname.replace('.dirty','.invert.saved'))
+# saveinputs('clean',imname.replace('.dirty','.invert.saved'))
 
-# Pause script if you are running in scriptmode
-if scriptmode:
-    inp()
-    user_check=raw_input('Return to continue script\n')
+# # Pause script if you are running in scriptmode
+# if scriptmode:
+#     inp()
+#     user_check=raw_input('Return to continue script\n')
 
-clean()
+# clean()
 
-#=====================================================================
-#
-# Now clean an image cube of J0939
-#
+# #=====================================================================
+# #
+# # (for some reason, it doesn't work...) - the resulting cube has emission in all channels
+# # Now clean an image cube of J0939
+# #
 
-print '--      Clean (clean)          --'
-print '---- prior to removing cont. ----'
-default('clean')
+# print '--      Clean (clean)          --'
+# print '---- prior to removing cont. ----'
+# default('clean')
 
-vis = splitms
-restfreq = str(freq_CO_J0939)+'GHz'
-imname = prefix + '.withcont.clean'
-os.system('rm -rf '+imname+'*')
-imagename = imname
+# vis = splitms
+# restfreq = str(freq_CO_J0939)+'GHz'
+# imname = prefix + '.withcont.clean'
+# os.system('rm -rf '+imname+'*')
+# imagename = imname
 
-# Set up the output image cube
-mode = 'velocity'
-start = str(start_velo)+'km/s'
-binning = 2         # 29km/s ~ 1.5 channels of native spec. res.
-# nchan = -1        # make the max # of chan. before deciding how many I need
-nchan = 215/binning         # for high freq baseband to span up to 2000km/s
-width = str(binning * specRes) + 'km/s'
+# # Set up the output image cube
+# mode = 'velocity'
+# start = str(start_velo)+'km/s'
+# binning = 2         # 29km/s ~ 1.5 channels of native spec. res.
+# # nchan = -1        # make the max # of chan. before deciding how many I need
+# nchan = 215/binning         # for high freq baseband to span up to 2000km/s
+# width = str(binning * specRes) + 'km/s'
 
-gain = 0.1
-imsize = [256]
-cell = [0.75]
-niter = 6000
-interactive = True
+# gain = 0.1
+# imsize = [256]
+# cell = [0.75]
+# niter = 6000
+# interactive = True
 
-# Also set flux residual threshold (in mJy)
-threshold = 1.0
-# Do a simple Clark clean
-psfmode = 'clark'
+# # Also set flux residual threshold (in mJy)
+# threshold = 1.0
+# # Do a simple Clark clean
+# psfmode = 'clark'
 
-saveinputs('clean', imname.replace('.dirty','.invert.saved'))
+# saveinputs('clean', imname.replace('.dirty','.invert.saved'))
 
-# Pause script if you are running in scriptmode
-if scriptmode:
-    inp()
-    user_check=raw_input('Return to continue script\n')
+# # Pause script if you are running in scriptmode
+# if scriptmode:
+#     inp()
+#     user_check=raw_input('Return to continue script\n')
 
-clean()
+# clean()
 
 
 #=====================================================================
