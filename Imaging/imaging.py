@@ -157,11 +157,15 @@ imname = prefix + '.withcont.dirty'
 os.system('rm -rf '+imname+'*')
 imagename = imname
 #
+#
+freq_CO = 115.2712 # GHz
+z = 2.221
+freq_CO_J0939 = freq_CO / (1+z)
 restfreq = str(freq_CO_J0939)+'GHz'
 freq_lastChan = 35.965      # GHz
 start_velo = (freq_CO_J0939 - freq_lastChan)/freq_CO_J0939 * 3e10/1e5
 specRes = 16.7656            # native spec. res. = 2 MHz
-
+#
 mode = 'velocity'
 start = str(start_velo)+'km/s'
 binning = 2         # 29km/s ~ 1.5 channels of native spec. res.
@@ -296,11 +300,6 @@ srcsplitms = vis + '.contsub'
 # Look for line after removing cont., may not see if line is weak
 #
 plotms(vis=srcsplitms, xaxis="frequency", yaxis="amp", avgtime='1e7', avgscan=True, avgbaseline=True)
-
-freq_CO = 115.2712 # GHz
-z = 2.221
-freq_CO_J0939 = freq_CO / (1+z)
-restfreq = str(freq_CO_J0939)+'GHz'
 
 print '-- Check if line is there --'
 plotms(vis=srcsplitms,xaxis="velocity",yaxis="amp", ydatacolumn="data",selectdata=True, spw="6", avgtime="1e7", correlation='LL,RR')
