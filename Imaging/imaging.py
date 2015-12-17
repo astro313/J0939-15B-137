@@ -202,7 +202,7 @@ print '--      Clean (clean)          --'
 print '---- prior to removing cont. ----'
 default('clean')
 
-vis = srcsplitms
+vis = splitms
 restfreq = str(freq_CO_J0939)+'GHz'
 imname = prefix + '.withcont.clean'
 os.system('rm -rf '+imname+'*')
@@ -295,16 +295,16 @@ uvcontsub()
 # You will see it made a new MS ONLY (with want_cont=False):
 # <vis>.contsub
 
-srcsplitms = vis + '.contsub'
+splitms = vis + '.contsub'
 
 #=====================================================================
 #
 # Look for line after removing cont., may not see if line is weak
 #
-plotms(vis=srcsplitms, xaxis="frequency", yaxis="amp", avgtime='1e7', avgscan=True, avgbaseline=True)
+plotms(vis=splitms, xaxis="frequency", yaxis="amp", avgtime='1e7', avgscan=True, avgbaseline=True)
 
 print '-- Check if line is there --'
-plotms(vis=srcsplitms,xaxis="velocity",yaxis="amp", ydatacolumn="data",selectdata=True, spw="6", avgtime="1e7", correlation='LL,RR')
+plotms(vis=splitms,xaxis="velocity",yaxis="amp", ydatacolumn="data",selectdata=True, spw="6", avgtime="1e7", correlation='LL,RR')
 
 #=====================================================================
 #
@@ -314,7 +314,7 @@ print '--Clean (make dirty image) after removing cont.--'
 default('clean')
 
 # splited source continuum-subtracted data
-vis = srcsplitms
+vis = splitms
 imname = prefix + '.dirty'
 os.system('rm -rf '+imname+'*')
 imagename = imname
@@ -363,7 +363,7 @@ rms = 0.17        # mJy/beam
 print '-- Clean (clean) line cube after removing continuum --'
 default('clean')
 
-vis = srcsplitms
+vis = splitms
 restfreq = str(freq_CO_J0939)+'GHz'
 imname = prefix + '.clean'
 os.system('rm -rf '+imname+'*')
