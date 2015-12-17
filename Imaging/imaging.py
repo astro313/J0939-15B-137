@@ -57,7 +57,6 @@
 #                              v                                             #
 ##############################################################################
 
-import time
 import os
 
 scriptmode = True
@@ -416,7 +415,7 @@ clnimage = imname+'.image'
 #
 if scriptmode:
     print '--View image--'
-    viewer(clnimage,'image')
+    viewer(clnimage)
     user_check=raw_input('Return to continue script\n')
 
 viewer(clnimage)

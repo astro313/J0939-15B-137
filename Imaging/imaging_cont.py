@@ -54,7 +54,7 @@ Clean continuum
 
 import os
 
-scriptmode = True
+scriptmode = False
 
 # The prefix to use for all output files
 prefix = '/data/dleung/DATA/VLA/15B-137/Imaging/J0939'
@@ -73,17 +73,13 @@ print '-- Create an Averaged Continuum MS of Both Basebands--'
 # Use plotms to identify line and continuum spw
 # Only possible to see if the line is very STRONG
 # If can't see, then just use the spws that we know is line-free
-plotms(vis=outputvis, xaxis='channel', yaxis='amp',
-       ydatacolumn='data',
-       # you should only lightly average over frequency
-       avgtime='1e8s', avgscan=True, avgchannel='2',
-       iteraxis='spw')
+plotms(vis=outputvis, xaxis='channel', yaxis='amp', ydatacolumn='data', avgtime='1e8s', avgscan=True, avgchannel='2', iteraxis='spw')
 
 plotms(vis=outputvis, xaxis="frequency", yaxis="amp",
        avgtime='1e7', avgscan=True, avgbaseline=True)
 
 # "line channels"
-linechans = '6:*'
+linechans = '6'
 
 # Set spws to be used to form continuum
 contspws = '0,1,2,3,4,5,7,8,9,10,11,12,13,14,15'
@@ -97,18 +93,19 @@ flagdata(vis=outputvis, mode='manual', spw=linechans, flagbackup=False)
 # check that flags are as expected, NOTE must check reload on plotms
 # gui if its still open.
 plotms(vis=outputvis, yaxis='amp', xaxis='channel',
-       avgchannel='2', avgtime='1e8', avgscan=True, iteraxis='spw')
+       avgchannel='5', avgtime='1e8', avgscan=True, iteraxis='spw')
 
 # Average the channels within spws
 contvis = prefix.replace('J0939', 'J0939_cont.ms')
 rmtables(contvis)
 
 default('split')
+outputvis=splitms
 split(vis=outputvis,
       spw=contspws,
       outputvis=contvis,
-      width=[64, 64, 64, 64],
-      datacolumn='data')
+      width=[64,64,64,64,64,64,64,64,64,64,64,64,64,64,64],
+      datacolumn='data')           # s.t. not affected by uvcontsub
 
 # Inspect continuum for any problems
 plotms(vis=contvis, xaxis='uvdist', yaxis='amp', coloraxis='spw')
@@ -128,10 +125,11 @@ contvisL = prefix.replace('J0939', 'J0939_contL.ms')
 rmtables(contvisL)
 
 default('split')
+outputvis = splitms
 split(vis=outputvis,
       spw=contspwsL,
       outputvis=contvisL,
-      width=[64, 64, 64, 64],
+      width=[64,64,64,64,64,64,64,64],
       datacolumn='data')
 
 # Inspect continuum for any problems
@@ -145,17 +143,18 @@ plotms(vis=contvisL, xaxis='uvdist', yaxis='amp', coloraxis='spw')
 print '-- Create an Averaged Continuum MS of High Freq Baseband--'
 
 # Set spws to be used to form continuum
-contspwsU = '0~7'
+contspwsU = '0~5,7'
 
 # Average the channels within spws
 contvisU = prefix.replace('J0939', 'J0939_contU.ms')
 rmtables(contvisU)
 
 default('split')
-split(vis=outputvisU,
+outputvis = splitms
+split(vis=outputvis,
       spw=contspwsU,
       outputvis=contvisU,
-      width=[64, 64, 64, 64],
+      width=[64,64,64,64,64,64,64],
       datacolumn='data')
 
 # Inspect continuum for any problems
@@ -206,9 +205,9 @@ if scriptmode:
 clean()
 
 dirtyimage = imname + '.image'
-viewer(dirtyimage, 'image')
+viewer(dirtyimage)
 # get offline rms
-rms = BLAH        # mJy/beam
+rms = 0.1        # mJy/beam
 
 #=====================================================================
 #
@@ -228,7 +227,7 @@ psfmode = 'clark'
 imsize = [256]
 cell = ['0.75arcsec']
 niter = 10000
-threshold = 0
+threshold = rms
 stokes = 'I'
 interactive = True
 threshold = threshold
@@ -256,19 +255,20 @@ clnimage = imname + '.image'
 #
 if scriptmode:
     print '--View image--'
-    viewer(clnimage, 'image')
+    viewer(clnimage)
     user_check = raw_input('Return to continue script\n')
 
-viewer(clnimag, 'image')
+viewer(clnimage)
+rms = 5.2e-5       # Jy /beam
 #
 # Alternatively, you can use the scripting "imview" approach.
 #
 imview(raster={'file': clnimage,
-               'range': [-0.001, 3e-3],
+               'range': [-1.5e-4, 1.5e-2],
                'colormap': 'Rainbow 2', 'scaling': 0.0, 'colorwedge': True},
        contour={'file': clnimage,
                 'levels': [-6, -3, 3, 4, 5, 6, 7, 8, 9, 12, 15, 16],
-                'unit': threshold / 1e3},       # Jy/beam
+                'unit': rms},       # Jy/beam
        zoom=3)
 
 
@@ -288,7 +288,7 @@ async = True
 #
 saveinputs('exportfits', prefix+'cont.clean.exportfits.saved')
 #
-myhandle2 = exportfits()
+exportfits()
 
 #=====================================================================
 #
@@ -345,9 +345,9 @@ if scriptmode:
 clean()
 
 dirtyimage = imname + '.image'
-viewer(dirtyimage, 'image')
+viewer(dirtyimage)
 # get offline rms
-rms = BLAH        # mJy/beam
+rms = 0.45        # mJy/beam
 
 #=====================================================================
 #
@@ -367,7 +367,7 @@ psfmode = 'clark'
 imsize = [256]
 cell = ['0.75arcsec']
 niter = 10000
-threshold = 0
+threshold = rms
 stokes = 'I'
 interactive = True
 threshold = threshold
@@ -395,19 +395,20 @@ clnimage = imname + '.image'
 #
 if scriptmode:
     print '--View image--'
-    viewer(clnimage, 'image')
+    viewer(clnimage)
     user_check = raw_input('Return to continue script\n')
 
-viewer(clnimag, 'image')
+viewer(clnimage)
+rms = 4.5e-5
 #
 # Alternatively, you can use the scripting "imview" approach.
 #
 imview(raster={'file': clnimage,
-               'range': [-0.001, 3e-3],
+               'range': [-0.001, 1e-2],
                'colormap': 'Rainbow 2', 'scaling': 0.0, 'colorwedge': True},
        contour={'file': clnimage,
                 'levels': [-6, -3, 3, 4, 5, 6, 7, 8, 9, 12, 15, 16],
-                'unit': threshold / 1e3},       # Jy/beam
+                'unit': rms},       # Jy/beam
        zoom=3)
 
 
@@ -427,7 +428,7 @@ async = True
 #
 saveinputs('exportfits', prefix+'.contL.clean.exportfits.saved')
 #
-myhandle2 = exportfits()
+exportfits()
 
 #=====================================================================
 #
@@ -482,9 +483,9 @@ if scriptmode:
 clean()
 
 dirtyimage = imname + '.image'
-viewer(dirtyimage, 'image')
+viewer(dirtyimage)
 # get offline rms
-rms = BLAH        # mJy/beam
+rms = 0.24        # mJy/beam
 
 #=====================================================================
 #
@@ -504,7 +505,7 @@ psfmode = 'clark'
 imsize = [256]
 cell = ['0.75arcsec']
 niter = 10000
-threshold = 0
+threshold = rms
 stokes = 'I'
 interactive = True
 threshold = threshold
@@ -532,10 +533,10 @@ clnimage = imname + '.image'
 #
 if scriptmode:
     print '--View image--'
-    viewer(clnimage, 'image')
+    viewer(clnimage)
     user_check = raw_input('Return to continue script\n')
 
-viewer(clnimag, 'image')
+viewer(clnimage)
 #
 # Alternatively, you can use the scripting "imview" approach.
 #
