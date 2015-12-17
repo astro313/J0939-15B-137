@@ -94,6 +94,8 @@ listobs()
 print '--Split J0939 Data--'
 default('split')
 
+
+vis = "/data/dleung/DATA/VLA/15B-137/Imaging/3C220.3CAL.ms"
 splitms = prefix + '.src.split.ms'
 outputvis = splitms
 field = '2'
