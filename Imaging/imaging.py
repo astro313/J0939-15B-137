@@ -158,13 +158,13 @@ print "Created "+splitms
 # imagename = imname
 # #
 # #
-# freq_CO = 115.2712 # GHz
-# z = 2.221
-# freq_CO_J0939 = freq_CO / (1+z)
-# restfreq = str(freq_CO_J0939)+'GHz'
-# freq_lastChan = 35.965      # GHz
-# start_velo = (freq_CO_J0939 - freq_lastChan)/freq_CO_J0939 * 3e10/1e5
-# specRes = 16.7656            # native spec. res. = 2 MHz
+freq_CO = 115.2712 # GHz
+z = 2.221
+freq_CO_J0939 = freq_CO / (1+z)
+restfreq = str(freq_CO_J0939)+'GHz'
+freq_lastChan = 35.965      # GHz
+start_velo = (freq_CO_J0939 - freq_lastChan)/freq_CO_J0939 * 3e10/1e5
+specRes = 16.7656            # native spec. res. = 2 MHz
 # #
 # mode = 'velocity'
 # start = str(start_velo)+'km/s'
