@@ -52,7 +52,7 @@
 
 import os
 
-scriptmode = True
+scriptmode = False
 #
 # Set up some useful variables
 #
@@ -63,7 +63,9 @@ scriptmode = True
 prefix = '/data/dleung/DATA/VLA/15B-137/Imaging/J0939'
 
 # Clean up old files
-os.system('rm -rf '+prefix+'.*')    # continuum maps named with underscore
+if scriptmode:
+    user_check=raw_input("Do you want to remove existing files before continue? (Y/N) \n")
+    if user_check == 'Y': os.system('rm -rf '+prefix+'.*')    # continuum maps named with underscore
 
 vis = "/data/dleung/DATA/VLA/15B-137/Imaging/3C220.3CAL.ms"
 #=====================================================================
@@ -87,7 +89,7 @@ listobs()
 #
 #
 # Split J0939 data (before continuum subtraction)
-#
+
 print '--Split J0939 Data--'
 default('split')
 
@@ -103,8 +105,8 @@ saveinputs('split', prefix+'.split.J0939.saved')
 
 split()
 
-print "Created "+splitms
-
+#print "Created "+splitms
+#
 # If you want, split out the calibrater J1153+8058_SNR field, all chans
 #print '--Split J1153+8058 Data--'
 #
@@ -218,7 +220,7 @@ specRes = 16.7656            # native spec. res. = 2 MHz
 # gain = 0.1
 # imsize = [256]
 # cell = [0.75]
-# niter = 6000
+# niter = 10000
 # interactive = True
 
 # # Also set flux residual threshold (in mJy)
@@ -262,12 +264,12 @@ specRes = 16.7656            # native spec. res. = 2 MHz
 
 print '--UV Continuum Subtract--'
 default('uvcontsub')
-
+#
 vis = splitms
-
+#
 field = '0'
 fitspw = '0,1,2,3,4,5,7,8,9,10,11,12,13,14,15'
-
+#
 # only output the high frequency baseband spws
 spw = '0,1,2,3,4,5,6,7'
 combine = 'scan,spw'
@@ -280,19 +282,19 @@ fitmode = 'subtract'
 
 saveinputs('uvcontsub', prefix+'.uvcontsub.saved')
 
-# Pause script if you are running in scriptmode
+Pause script if you are running in scriptmode
 if scriptmode:
-    inp()
-    user_check=raw_input('Return to continue script\n')
+   inp()
+   user_check=raw_input('Return to continue script\n')
 
 uvcontsub()
-
+#
 # You will see it made two new MS (with want_cont=True):
 # <vis>.cont
 # <vis>.contsub
 
 # You will see it made a new MS ONLY (with want_cont=False):
-# <vis>.contsub
+v# <vis>.contsub
 
 splitms = vis + '.contsub'
 
@@ -300,11 +302,12 @@ splitms = vis + '.contsub'
 #
 # Look for line after removing cont., may not see if line is weak
 #
-plotms(vis=splitms, xaxis="frequency", yaxis="amp", avgtime='1e7', avgscan=True, avgbaseline=True)
+if scriptmode:
+    plotms(vis=splitms, xaxis="frequency", yaxis="amp", avgtime='1e7', avgscan=True, avgbaseline=True)
 
-print '-- Check if line is there --'
-plotms(vis=splitms,xaxis="velocity",yaxis="amp", ydatacolumn="data",selectdata=True, spw="6", avgtime="1e7", correlation='LL,RR')
-
+    print '-- Check if line is there --'
+    plotms(vis=splitms,xaxis="velocity",yaxis="amp", ydatacolumn="data",selectdata=True, spw="6", avgtime="1e7", correlation='LL,RR')
+#
 #=====================================================================
 #
 # make a dirty image cube
@@ -365,7 +368,9 @@ default('clean')
 vis = splitms
 restfreq = str(freq_CO_J0939)+'GHz'
 imname = prefix + '.clean'
-os.system('rm -rf '+imname+'*')
+for ext in ['.flux', '.image', '.model', '.pbcor', '.psf', '.residual',
+ '.flux.pbcoverage']:
+    rmtables(imname + ext)
 imagename = imname
 
 # Set up the output image cube
@@ -379,7 +384,7 @@ width = str(binning * specRes) + 'km/s'
 gain = 0.1
 imsize = [256]
 cell = [0.75]
-niter = 6000
+niter = 10000
 interactive = True
 
 # Also set flux residual threshold (in mJy)
@@ -448,7 +453,7 @@ async = True
 #
 saveinputs('exportfits',prefix+'.exportfits.saved')
 #
-myhandle2 = exportfits()
+exportfits()
 
 #=====================================================================
 #

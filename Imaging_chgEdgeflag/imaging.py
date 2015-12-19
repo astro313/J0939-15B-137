@@ -370,7 +370,9 @@ default('clean')
 vis = splitms
 restfreq = str(freq_CO_J0939)+'GHz'
 imname = prefix + '.clean'
-os.system('rm -rf '+imname+'*')
+for ext in ['.flux', '.image', '.model', '.pbcor', '.psf', '.residual',
+ '.flux.pbcoverage']:
+    rmtables(imname + ext)
 imagename = imname
 
 # Set up the output image cube
@@ -384,7 +386,7 @@ width = str(binning * specRes) + 'km/s'
 gain = 0.1
 imsize = [256]
 cell = [0.75]
-niter = 6000
+niter = 10000
 interactive = True
 
 # Also set flux residual threshold (in mJy)
