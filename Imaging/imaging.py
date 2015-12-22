@@ -1,3 +1,8 @@
+'''
+Script is customized for specific dataset, need to modify paramters for other dataset
+- e.g. stokes, start_velo, binning, restfreq, etc
+'''
+
 ##############################################################################
 # Last Modified: 17 Dec 2015                                                 #
 #                                                                            #
@@ -56,8 +61,7 @@ scriptmode = False
 #
 # Set up some useful variables
 #
-# Get to path to the CASA home and stip off the name
-# pathname = os.environ.get('CASAPATH').split()[0]
+
 
 # The prefix to use for all output files
 prefix = '/data/dleung/DATA/VLA/15B-137/Imaging/J0939'
@@ -276,13 +280,13 @@ combine = 'scan,spw'
 
 # Let it split out the data automatically for us
 splitdata = True
-solint = 0.0
+solint = 0.0          # solint='int'
 fitorder = 1
 fitmode = 'subtract'
 
 saveinputs('uvcontsub', prefix+'.uvcontsub.saved')
 
-Pause script if you are running in scriptmode
+# Pause script if you are running in scriptmode
 if scriptmode:
    inp()
    user_check=raw_input('Return to continue script\n')
