@@ -167,11 +167,11 @@ default('clean')
 
 vis = contvis
 contimagename = prefix.replace('J0939', 'J0939_cont')
-for ext in ['.flux', '.image', '.mask', '.model', '.pbcor', '.psf', '.residual', '.flux.pbcoverage']:
-    rmtables(contimagename + ext)
-
 imname = contimagename + '.dirty'
-os.system('rm -rf ' + imname + '*')
+for ext in ['.flux', '.image', '.mask', '.model', '.pbcor', '.psf', '.residual', '.flux.pbcoverage']:
+    rmtables(imname + ext)
+
+
 imagename = imname
 
 mode = 'mfs'
@@ -210,7 +210,9 @@ default('clean')
 vis = contvis
 contimagename = prefix.replace('J0939', 'J0939_cont')
 imname = contimagename + '.clean'
-os.system('rm -rf ' + imname + '*')
+for ext in ['.flux', '.image', '.mask', '.model', '.pbcor', '.psf', '.residual', '.flux.pbcoverage']:
+    rmtables(imname + ext)
+
 imagename = imname
 
 mode = 'mfs'
@@ -307,11 +309,10 @@ default('clean')
 
 vis = contvisL
 contimagename = prefix.replace('J0939', 'J0939_contL')
-for ext in ['.flux', '.image', '.mask', '.model', '.pbcor', '.psf', '.residual', '.flux.pbcoverage']:
-    rmtables(contimagename + ext)
-
 imname = contimagename + '.dirty'
-os.system('rm -rf ' + imname + '*')
+for ext in ['.flux', '.image', '.mask', '.model', '.pbcor', '.psf', '.residual', '.flux.pbcoverage']:
+    rmtables(imname + ext)
+
 imagename = imname
 
 mode = 'mfs'
@@ -350,7 +351,9 @@ default('clean')
 vis = contvisL
 contimagename = prefix.replace('J0939', 'J0939_contL')
 imname = contimagename + '.clean'
-os.system('rm -rf ' + imname + '*')
+for ext in ['.flux', '.image', '.mask', '.model', '.pbcor', '.psf', '.residual', '.flux.pbcoverage']:
+    rmtables(imname + ext)
+
 imagename = imname
 
 mode = 'mfs'
@@ -445,11 +448,10 @@ default('clean')
 
 vis = contvisU
 contimagename = prefix.replace('J0939', 'J0939_contU')
-for ext in ['.flux', '.image', '.mask', '.model', '.pbcor', '.psf', '.residual', '.flux.pbcoverage']:
-    rmtables(contimagename + ext)
-
 imname = contimagename + '.dirty'
-os.system('rm -rf ' + imname + '*')
+for ext in ['.flux', '.image', '.mask', '.model', '.pbcor', '.psf', '.residual', '.flux.pbcoverage']:
+    rmtables(imname + ext)
+
 imagename = imname
 
 mode = 'mfs'
@@ -488,7 +490,9 @@ default('clean')
 vis = contvisU
 contimagename = prefix.replace('J0939', 'J0939_contU')
 imname = contimagename + '.clean'
-os.system('rm -rf ' + imname + '*')
+for ext in ['.flux', '.image', '.mask', '.model', '.pbcor', '.psf', '.residual', '.flux.pbcoverage']:
+    rmtables(imname + ext)
+
 imagename = imname
 
 mode = 'mfs'
@@ -572,4 +576,3 @@ mode = 'summary'
 imhead()
 
 # A summary of the cube will be seen in the logger
-
