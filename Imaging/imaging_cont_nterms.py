@@ -4,9 +4,9 @@
 # TODO:                                                                      #
 # -----                                                                      #
 # - update flow chart                                                        #
-# - try nterms=2                                                             #
 #                                                                            #
-# Continuum imaging for SMM J0939+8315                                       #
+#                                                                            #
+# Continuum imaging for SMM J0939+8315 with nterms=2                         #
 #                                                                            #
 # Features Tested:                                                           #
 #    The script illustrates end-to-end processing with CASA                  #
