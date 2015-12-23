@@ -300,7 +300,31 @@ mode = 'summary'
 
 imhead()
 
-# A summary of the cube will be seen in the logger
+# A summary of the map will be seen in the logger
+
+#=====================================================================
+#
+# Get map statistics
+#
+print '--Imstat --'
+default('imstat')
+
+imagename = clnimage
+
+box_on = '110,110,140,140'
+box_off = '30,30,218,100'
+
+box = box_off
+imgstat = imstat()               # dictionary; imgstat['key'][axis]
+rms = (imgstat['rms'][0])
+print '>> rms: '+str(rms)
+
+box = box_on
+imgstat_on = imstat()
+peak = (imgstat_on['max'][0])
+print '>> Peak: '+str(peak)
+
+print '>> Dynamic range: '+str(peak/rms)
 
 
 # ------------ Repeat for basebnad continuum image --------------
@@ -446,6 +470,30 @@ imhead()
 # A summary of the cube will be seen in the logger
 
 #=====================================================================
+#
+# Get map statistics
+#
+print '--Imstat --'
+default('imstat')
+
+imagename = clnimage
+
+box_on = '110,110,140,140'
+box_off = '30,30,218,100'
+
+box = box_off
+imgstat = imstat()               # dictionary; imgstat['key'][axis]
+rms = (imgstat['rms'][0])
+print '>> rms: '+str(rms)
+
+box = box_on
+imgstat_on = imstat()
+peak = (imgstat_on['max'][0])
+print '>> Peak: '+str(peak)
+
+print '>> Dynamic range: '+str(peak/rms)
+
+#=====================================================================
 # Make dirty continuum map of J0939, high frequency baseband
 #
 
@@ -584,3 +632,27 @@ mode = 'summary'
 imhead()
 
 # A summary of the cube will be seen in the logger
+
+#=====================================================================
+#
+# Get map statistics
+#
+print '--Imstat --'
+default('imstat')
+
+imagename = clnimage
+
+box_on = '110,110,140,140'
+box_off = '30,30,218,100'
+
+box = box_off
+imgstat = imstat()               # dictionary; imgstat['key'][axis]
+rms = (imgstat['rms'][0])
+print '>> rms: '+str(rms)
+
+box = box_on
+imgstat_on = imstat()
+peak = (imgstat_on['max'][0])
+print '>> Peak: '+str(peak)
+
+print '>> Dynamic range: '+str(peak/rms)
