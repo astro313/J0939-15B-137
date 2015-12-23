@@ -1,17 +1,36 @@
 '''
-Script is customized for specific dataset, need to modify paramters for other dataset
-- e.g. stokes, start_velo, binning, restfreq, clean rms, viewer rms, etc
+Script is customized for specific dataset, need to modify paramters for other dataset (even data of the same observations)
+- e.g. prefix, vis, stokes, start_velo, binning, restfreq, clean rms, viewer rms, etc
+
+
+Note, clean mask can be re-used, but gridding must be the same (nchan, imagesize, cellsize, etc)
 '''
 
 ##############################################################################
-# Last Modified: 17 Dec 2015                                                 #
+# Last Modified: 22 Dec 2015                                                 #
+#                                                                            #
+# Imaging Script for SMM J0939+8315 using Clark CLEAN                        #
+#                                                                            #
 #                                                                            #
 # TODO:                                                                      #
 # -----                                                                      #
 # - update flow chart                                                        #
-# - check uvcontsub with solint='int'                                        #
+# - consider adding script to split out just LL,RR before imaging            #
 #                                                                            #
-# Imaging Script for SMM J0939+8315 using Clark CLEAN                        #
+#                                                                            #
+#                                                                            #
+#                                                                            #
+# Note:                                                                      #
+# -----                                                                      #
+# - uvcontsub() solint='int' same as solint=0.0 (i.e. no time averaging)     #
+#                                                                            #
+#                                                                            #
+# History:                                                                   #
+# --------                                                                   #
+# 22 Dec 2015: updated flow chart to be consistent with code                 #
+# 16 Dec 2015: Generated script                                              #
+#                                                                            #
+#                                                                            #
 #                                                                            #
 # Features Tested:                                                           #
 #    The script illustrates end-to-end processing with CASA                  #
@@ -32,14 +51,18 @@ Script is customized for specific dataset, need to modify paramters for other da
 #                              v                                             #
 #            [OPTIONAL]  exportuvfits  -->  <prefix>.split.uvfits            #
 #                                                                            #
-#                                                                            #
+# (NOT WORKING)                                                              #
 # <prefix>.src.split.ms-->clean--><prefix>.withcont.clean.image +            #
 #                                 <prefix>.withcont.clean.model +            #
 #                                 <prefix>.withcont.clean.residual           #
 #                                                                            #
 #                                                                            #
-# <prefix>.src.split.ms --> uvcontsub  -->  <prefix>.ms.cont.sub             #
+# <prefix>.src.split.ms --> uvcontsub  --> <prefix>.src.split.ms.contsub     #
 #                              |                                             #
+#                              v                                             #
+#                            clean     -->  <prefix>.dirty.image +           #
+#                              |            <prefix>.dirty.model +           #
+#                              |            <prefix>.dirty.residual          #
 #                              v                                             #
 #                            clean     -->  <prefix>.clean.image +           #
 #                              |            <prefix>.clean.model +           #
@@ -273,7 +296,7 @@ combine = 'scan,spw'
 
 # Let it split out the data automatically for us
 splitdata = True
-solint = 0.0          # solint='int'
+solint = 0.0          # same as 'int', i.e. not time averaging
 fitorder = 1
 fitmode = 'subtract'
 
