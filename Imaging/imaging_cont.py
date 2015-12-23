@@ -62,7 +62,9 @@ outputvis = splitms
 # use this for continuum imaging, not the one from uvcontsub
 #
 
+casalog.post('-- Create an Averaged Continuum MS of Both Basebands--', 'INFO')
 print '-- Create an Averaged Continuum MS of Both Basebands--'
+
 
 # Use plotms to identify line and continuum spw
 # Only possible to see if the line is very STRONG

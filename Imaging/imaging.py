@@ -7,7 +7,7 @@ Note, clean mask can be re-used, but gridding must be the same (nchan, imagesize
 '''
 
 ##############################################################################
-# Last Modified: 22 Dec 2015                                                 #
+# Last Modified: 23 Dec 2015                                                 #
 #                                                                            #
 # Imaging Script for SMM J0939+8315 using Clark CLEAN                        #
 #                                                                            #
@@ -27,6 +27,7 @@ Note, clean mask can be re-used, but gridding must be the same (nchan, imagesize
 #                                                                            #
 # History:                                                                   #
 # --------                                                                   #
+# 23 Dec 2015: Added output log file containing useful # for note            #
 # 22 Dec 2015: updated flow chart to be consistent with code                 #
 # 16 Dec 2015: Generated script                                              #
 #                                                                            #
@@ -84,6 +85,7 @@ import time
 
 benchmarking = True
 scriptmode = False
+regressout = True
 
 # The prefix to use for all output files
 prefix = '/data/dleung/DATA/VLA/15B-137/Imaging/J0939'
@@ -336,7 +338,7 @@ if scriptmode:
 #
 #=====================================================================
 #
-# make a dirty image cube
+# make a dirty image cube, with natural weighting
 #
 print '--Clean (make dirty image) after removing cont.--'
 default('clean')
@@ -412,14 +414,10 @@ imsize = [256]
 cell = [0.75]
 niter = 10000
 interactive = True
-
 # Also set flux residual threshold (in mJy)
 threshold = rms
-# Do a simple Clark clean
-psfmode = 'clark'
 
 # Set up the weighting
-# Use Briggs weighting (a moderate value, on the uniform side)
 # weighting = 'briggs'
 # robust = 0.5
 
