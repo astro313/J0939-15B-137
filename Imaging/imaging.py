@@ -80,22 +80,29 @@ Note, clean mask can be re-used, but gridding must be the same (nchan, imagesize
 ##############################################################################
 
 import os
+import time
 
+benchmarking = True
 scriptmode = False
-#
-# Set up some useful variables
-#
 
 # The prefix to use for all output files
 prefix = '/data/dleung/DATA/VLA/15B-137/Imaging/J0939'
 
 # Clean up old files
 if scriptmode:
-    user_check=raw_input("Do you want to remove existing files before continue? (Y/N) \n")
-    if user_check == 'Y': os.system('rm -rf '+prefix+'.*')    # continuum maps named with underscore
+    user_check = raw_input(
+        "Do you want to remove existing files before continue? (Y/N) \n")
+    if user_check == 'Y':
+        # continuum maps named with underscore
+        os.system('rm -rf ' + prefix + '.*')
 
 vis = "/data/dleung/DATA/VLA/15B-137/Imaging/3C220.3CAL.ms"
 #=====================================================================
+# Start timing
+if benchmarking:
+    startTime = time.time()
+    startProc = time.clock()
+
 #
 # List a summary of the MS
 #
@@ -122,22 +129,22 @@ field = '2'
 spw = ''
 datacolumn = 'corrected'
 
-saveinputs('split', prefix+'.split.J0939.saved')
+saveinputs('split', prefix + '.split.J0939.saved')
 
 split()
 
-#print "Created "+splitms
+# print "Created "+splitms
 #
 # If you want, split out the calibrater J1153+8058_SNR field, all chans
-#print '--Split J1153+8058 Data--'
+# print '--Split J1153+8058 Data--'
 #
 #calsplitms = prefix + '.cal.split.ms'
 #outputvis = calsplitms
 #field = '1153*'
 #
-#saveinputs('split',prefix+'.split.J1153+8058_SNR.saved')
+# saveinputs('split',prefix+'.split.J1153+8058_SNR.saved')
 #
-#split()
+# split()
 
 #=====================================================================
 #
@@ -149,8 +156,8 @@ split()
 # even though it will have only one field in it
 # Run asynchronously so as not to interfere with other tasks
 #
-#print '--Export UVFITS--'
-#default('exportuvfits')
+# print '--Export UVFITS--'
+# default('exportuvfits')
 #
 #srcuvfits = prefix + '.split.uvfits'
 #
@@ -160,11 +167,12 @@ split()
 #multisource = True
 #async = True
 #
-#saveinputs('exportuvfits',prefix+'.exportuvfits.saved')
+# saveinputs('exportuvfits',prefix+'.exportuvfits.saved')
 #
 #myhandle = exportuvfits()
 #
-#print "The return value for this exportuvfits async task for tm is "+str(myhandle)
+# print "The return value for this exportuvfits async task for tm is
+# "+str(myhandle)
 
 # #=====================================================================
 # #
@@ -181,12 +189,12 @@ split()
 # imagename = imname
 # #
 # #
-freq_CO = 115.2712 # GHz
+freq_CO = 115.2712  # GHz
 z = 2.221
-freq_CO_J0939 = freq_CO / (1+z)
-restfreq = str(freq_CO_J0939)+'GHz'
+freq_CO_J0939 = freq_CO / (1 + z)
+restfreq = str(freq_CO_J0939) + 'GHz'
 freq_lastChan = 35.965      # GHz
-start_velo = (freq_CO_J0939 - freq_lastChan)/freq_CO_J0939 * 3e10/1e5
+start_velo = (freq_CO_J0939 - freq_lastChan) / freq_CO_J0939 * 3e10 / 1e5
 specRes = 16.7656            # native spec. res. = 2 MHz
 # #
 # mode = 'velocity'
@@ -300,12 +308,12 @@ solint = 0.0          # same as 'int', i.e. not time averaging
 fitorder = 1
 fitmode = 'subtract'
 
-saveinputs('uvcontsub', prefix+'.uvcontsub.saved')
+saveinputs('uvcontsub', prefix + '.uvcontsub.saved')
 
 # Pause script if you are running in scriptmode
 if scriptmode:
-   inp()
-   user_check=raw_input('Return to continue script\n')
+    inp()
+    user_check = raw_input('Return to continue script\n')
 
 uvcontsub()
 
@@ -319,10 +327,12 @@ splitms = vis + '.contsub'
 # Look for line after removing cont., may not see if line is weak
 #
 if scriptmode:
-    plotms(vis=splitms, xaxis="frequency", yaxis="amp", avgtime='1e7', avgscan=True, avgbaseline=True)
+    plotms(vis=splitms, xaxis="frequency", yaxis="amp",
+           avgtime='1e7', avgscan=True, avgbaseline=True)
 
     print '-- Check if line is there --'
-    plotms(vis=splitms,xaxis="velocity",yaxis="amp", ydatacolumn="data",selectdata=True, spw="6", avgtime="1e7", correlation='LL,RR')
+    plotms(vis=splitms, xaxis="velocity", yaxis="amp", ydatacolumn="data",
+           selectdata=True, spw="6", avgtime="1e7", correlation='LL,RR')
 #
 #=====================================================================
 #
@@ -334,31 +344,31 @@ default('clean')
 # splited source continuum-subtracted data
 vis = splitms
 imname = prefix + '.dirty'
-os.system('rm -rf '+imname+'*')
+os.system('rm -rf ' + imname + '*')
 imagename = imname
 #
-restfreq = str(freq_CO_J0939)+'GHz'
+restfreq = str(freq_CO_J0939) + 'GHz'
 mode = 'velocity'
-start = str(start_velo)+'km/s'
+start = str(start_velo) + 'km/s'
 binning = 2         # 29km/s ~ 1.5 channels of native spec. res.
 # nchan = -1        # make the max # of chan. before deciding how many I need
-nchan = 215/binning         # for high freq baseband to span up to 2000km/s
+nchan = 215 / binning         # for high freq baseband to span up to 2000km/s
 width = str(binning * specRes) + 'km/s'
 #
 spw = ''
 imsize = [256]
 cell = [0.75]
-stokes='I'
+stokes = 'I'
 niter = 0
 # weighting = 'briggs'
 # robust = 0.5
 
-saveinputs('clean',prefix+'.invert.saved')
+saveinputs('clean', prefix + '.invert.saved')
 
 # Pause script if you are running in scriptmode
 if scriptmode:
     inp()
-    user_check=raw_input('Return to continue script\n')
+    user_check = raw_input('Return to continue script\n')
 
 clean()
 
@@ -382,19 +392,19 @@ print '-- Clean (clean) line cube after removing continuum --'
 default('clean')
 
 vis = splitms
-restfreq = str(freq_CO_J0939)+'GHz'
+restfreq = str(freq_CO_J0939) + 'GHz'
 imname = prefix + '.clean'
 for ext in ['.flux', '.image', '.model', '.pbcor', '.psf', '.residual',
- '.flux.pbcoverage']:
+            '.flux.pbcoverage']:
     rmtables(imname + ext)
 imagename = imname
 
 # Set up the output image cube
 mode = 'velocity'
-start = str(start_velo)+'km/s'
+start = str(start_velo) + 'km/s'
 binning = 2         # 29km/s ~ 1.5 channels of native spec. res.
 # nchan = -1        # make the max # of chan. before deciding how many I need
-nchan = 215/binning         # for high freq baseband to span up to 2000km/s
+nchan = 215 / binning         # for high freq baseband to span up to 2000km/s
 width = str(binning * specRes) + 'km/s'
 
 gain = 0.1
@@ -413,16 +423,16 @@ psfmode = 'clark'
 # weighting = 'briggs'
 # robust = 0.5
 
-saveinputs('clean',prefix+'.clean.saved')
+saveinputs('clean', prefix + '.clean.saved')
 
 # Pause script if you are running in scriptmode
 if scriptmode:
     inp()
-    user_check=raw_input('Return to continue script\n')
+    user_check = raw_input('Return to continue script\n')
 
 clean()
 
-clnimage = imname+'.image'
+clnimage = imname + '.image'
 #=====================================================================
 #
 # Done with imaging
@@ -431,18 +441,18 @@ clnimage = imname+'.image'
 if scriptmode:
     print '--View image--'
     viewer(clnimage)
-    user_check=raw_input('Return to continue script\n')
+    user_check = raw_input('close viewer, hit Return to continue script\n')
 
 viewer(clnimage)
 #
 # Alternatively, you can use the scripting "imview" approach.
 #
 imview(raster={'file': clnimage,
-                       'range': [-0.001,3e-3],
-                       'colormap': 'Rainbow 2', 'scaling': 0.0, 'colorwedge': True},
-               contour={'file': clnimage,
-                        'levels': [-6,-3,3,4,5,6,7,8,9,12,15,16],
-                        'unit': 0.00017}, zoom=3)
+               'range': [-0.001, 3e-3],
+               'colormap': 'Rainbow 2', 'scaling': 0.0, 'colorwedge': True},
+       contour={'file': clnimage,
+                'levels': [-6, -3, 3, 4, 5, 6, 7, 8, 9, 12, 15, 16],
+                'unit': 0.00017}, zoom=3)
 
 
 #=====================================================================
@@ -459,7 +469,7 @@ imagename = clnimage
 fitsimage = clnfits
 async = True
 #
-saveinputs('exportfits',prefix+'.exportfits.saved')
+saveinputs('exportfits', prefix + '.exportfits.saved')
 #
 exportfits()
 
@@ -477,7 +487,22 @@ mode = 'summary'
 imhead()
 
 # A summary of the cube will be seen in the logger
+#=====================================================================
+#
+# Get the cube INFO
+#
+print '--Imhead (cube)--'
+default('imhead')
 
+imagename = clnimage
+
+bmaj = imhead(imagename=imagename, mode="get", hdkey="bmaj")['value']
+bmin = imhead(imagename=imagename, mode="get", hdkey="bmin")['value']
+bpa = imhead(imagename=imagename, mode="get", hdkey="bpa")['value']
+restfreq_Hz = imhead(imagename=imagename, mode="get", hdkey="restfreq")['value']
+specRes_freq = imhead(imagename=imagename, mode="get", hdkey="cdelt4")['value']
+
+nchan = imhead(imagename=imagename, mode="get", hdkey="shape")[3]
 #=====================================================================
 #
 # Get the cube statistics
@@ -487,15 +512,94 @@ default('imstat')
 
 imagename = clnimage
 
-# Do whole image
-#box = ''
-# or define a region
-box = '30,30,218,100'
+box_on = '110,110,140,140'
+box_off = '30,30,218,100'
 
-cubestats = imstat()
+box = box_on
+cubestats_on = imstat()
+peak = (cubestats_on['max'][0])
 
+
+box = box_off
+cubestats_off = imstat()
+rms = (cubestats_off['rms'][0])
+
+print '>> Peak: ' + str(peak)
+print '>> rms: ' + str(rms)
+print '>> Dynamic range: ' + str(peak / rms)
 # Statistics will printed to the terminal, and the output
 # parameter will contain a dictionary of the statistics
 
 
+#=====================================================================
+# DONE
+#=====================================================================
+if benchmarking:
+    endProc = time.clock()
+    endTime = time.time()
 
+#=====================================================================
+# Benchmarking numbers
+#=====================================================================
+if benchmarking:
+    walltime = (endTime - startTime)
+    cputime = (endProc - startProc)
+
+    print ''
+    print '  Total wall clock time was: %10.3f ' % walltime
+    print '  Total CPU        time was: %10.3f ' % cputime
+    print ''
+    casalog.post('')
+    casalog.post('  Total wall clock time was: %10.3f ' % walltime, 'INFO')
+    casalog.post('  Total CPU        time was: %10.3f ' % cputime)
+    casalog.post('')
+
+#=====================================================================
+# Regression values (lite)
+#=====================================================================
+if regressout:
+    # Set up date and version info
+    import datetime
+    datestring = datetime.datetime.isoformat(datetime.datetime.today())
+    myvers = casalog.version()
+    myuname = os.uname()
+    myhost = myuname[1]
+    myos = myuname[0] + ' ' + myuname[2] + ' ' + myuname[4]
+    # Set up output file and version info
+    outfile = prefix + '.' + datestring + '.log'
+    logfile = open(outfile, 'w')
+
+    # Print version info to outfile
+    print >>logfile, '---------------------------------------------------'
+    print >>logfile, 'Results for J0939 VLA D config from 15B-137'
+    print >>logfile, '---------------------------------------------------'
+    print >>logfile, 'Running ' + myvers + ' on host ' + myhost
+    print >>logfile, 'at ' + datestring
+    print >>logfile, 'for OS ' + myos
+    print >>logfile, ''
+
+    print >>logfile, '  %40s : %12.7f ' % ('J0939 Combined I maximum (Jy)',
+                                           peak)
+    print >>logfile, '  %40s : %12.7f ' % ('J0939 Combined  I off-source rms (Jy)', rms)
+    print >>logfile, '  %40s : %12.3f ' % ('J0939 Combined  I dynamic range',
+                                           peak/rms)
+    print >>logfile, ''
+    print >>logfile, '  %40s : %4.1f x %4.1f, %4.1f ' % ('Clean Beam size', bmaj, bmin, bpa)
+    print >>logfile, '  %40s : %12.7f ' % ('Rest frequency (Hz)',
+                                           restfreq_Hz)
+    print >>logfile, '  %40s : %12d ' % ('J0939 number of channels in cube', nchan)
+    print >>logfile, ''
+    print >>logfile, '  %40s : %12.7f ' % ('Spectral resolution in frequency (Hz)', specRes_freq)
+
+    if benchmarking:
+        print >>logfile, ''
+        print >>logfile, '  Total wall clock time was: %10.3f ' % walltime
+        print >>logfile, '  Total CPU        time was: %10.3f ' % cputime
+        print >>logfile, ''
+
+    logfile.close()
+    print ""
+    print "Results written to " + outfile
+
+print ""
+print "Done with J0939 Line imaging"
