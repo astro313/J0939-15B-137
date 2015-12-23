@@ -4,6 +4,7 @@
 # TODO:                                                                      #
 # -----                                                                      #
 # - update flow chart                                                        #
+# - fix bug, put vis= after rmtable()                                        #
 #                                                                            #
 # Continuum imaging for SMM J0939+8315                                       #
 #                                                                            #
@@ -48,7 +49,9 @@ import os
 scriptmode = False
 
 # The prefix to use for all output files
+# default nterms
 prefix = '/data/dleung/DATA/VLA/15B-137/Imaging/J0939'
+
 splitms = prefix + '.src.split.ms'
 outputvis = splitms
 
@@ -163,15 +166,15 @@ flagmanager(vis=outputvis, mode='restore',
 #
 
 print '-- Clean (make dirty continuum image) --'
-default('clean')
 
-vis = contvis
 contimagename = prefix.replace('J0939', 'J0939_cont')
 imname = contimagename + '.dirty'
 for ext in ['.flux', '.image', '.mask', '.model', '.pbcor', '.psf', '.residual', '.flux.pbcoverage']:
     rmtables(imname + ext)
 
+default('clean')
 
+vis = contvis
 imagename = imname
 
 mode = 'mfs'
@@ -205,14 +208,15 @@ rms = 0.1        # mJy/beam
 # Make and clean continuum map of J0939
 #
 print '-- Clean (clean) Continuum image --'
-default('clean')
 
-vis = contvis
 contimagename = prefix.replace('J0939', 'J0939_cont')
 imname = contimagename + '.clean'
 for ext in ['.flux', '.image', '.mask', '.model', '.pbcor', '.psf', '.residual', '.flux.pbcoverage']:
     rmtables(imname + ext)
 
+default('clean')
+
+vis = contvis
 imagename = imname
 
 mode = 'mfs'
@@ -305,14 +309,15 @@ imhead()
 #
 
 print '-- Clean (make dirty continuum image) --'
-default('clean')
 
-vis = contvisL
 contimagename = prefix.replace('J0939', 'J0939_contL')
 imname = contimagename + '.dirty'
 for ext in ['.flux', '.image', '.mask', '.model', '.pbcor', '.psf', '.residual', '.flux.pbcoverage']:
     rmtables(imname + ext)
 
+default('clean')
+
+vis = contvisL
 imagename = imname
 
 mode = 'mfs'
@@ -346,14 +351,15 @@ rms = 0.45        # mJy/beam
 # Make and clean continuum map of J0939
 #
 print '-- Clean (clean) Continuum image --'
-default('clean')
 
-vis = contvisL
 contimagename = prefix.replace('J0939', 'J0939_contL')
 imname = contimagename + '.clean'
 for ext in ['.flux', '.image', '.mask', '.model', '.pbcor', '.psf', '.residual', '.flux.pbcoverage']:
     rmtables(imname + ext)
 
+default('clean')
+
+vis = contvisL
 imagename = imname
 
 mode = 'mfs'
@@ -444,14 +450,15 @@ imhead()
 #
 
 print '-- Clean (make dirty continuum image) --'
-default('clean')
 
-vis = contvisU
 contimagename = prefix.replace('J0939', 'J0939_contU')
 imname = contimagename + '.dirty'
 for ext in ['.flux', '.image', '.mask', '.model', '.pbcor', '.psf', '.residual', '.flux.pbcoverage']:
     rmtables(imname + ext)
 
+default('clean')
+
+vis = contvisU
 imagename = imname
 
 mode = 'mfs'
@@ -485,14 +492,15 @@ rms = 0.24        # mJy/beam
 # Make and clean continuum map of J0939
 #
 print '-- Clean (clean) Continuum image --'
-default('clean')
 
-vis = contvisU
 contimagename = prefix.replace('J0939', 'J0939_contU')
 imname = contimagename + '.clean'
 for ext in ['.flux', '.image', '.mask', '.model', '.pbcor', '.psf', '.residual', '.flux.pbcoverage']:
     rmtables(imname + ext)
 
+default('clean')
+
+vis = contvisU
 imagename = imname
 
 mode = 'mfs'
