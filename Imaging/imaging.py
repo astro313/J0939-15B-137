@@ -1,6 +1,6 @@
 '''
 Script is customized for specific dataset, need to modify paramters for other dataset
-- e.g. stokes, start_velo, binning, restfreq, etc
+- e.g. stokes, start_velo, binning, restfreq, clean rms, viewer rms, etc
 '''
 
 ##############################################################################
@@ -9,8 +9,9 @@ Script is customized for specific dataset, need to modify paramters for other da
 # TODO:                                                                      #
 # -----                                                                      #
 # - update flow chart                                                        #
+# - check uvcontsub with solint='int'                                        #
 #                                                                            #
-# Imaging Script for SMM J0939+8315                                          #
+# Imaging Script for SMM J0939+8315 using Clark CLEAN                        #
 #                                                                            #
 # Features Tested:                                                           #
 #    The script illustrates end-to-end processing with CASA                  #
@@ -37,8 +38,8 @@ Script is customized for specific dataset, need to modify paramters for other da
 #                                 <prefix>.withcont.clean.residual           #
 #                                                                            #
 #                                                                            #
-# <prefix>.src.split.ms --> uvcontsub  -->  <prefix>.ms.cont +               #
-#                              |               <prefix>.ms.contsub           #
+# <prefix>.src.split.ms --> uvcontsub  -->  <prefix>.ms.cont.sub             #
+#                              |                                             #
 #                              v                                             #
 #                            clean     -->  <prefix>.clean.image +           #
 #                              |            <prefix>.clean.model +           #
@@ -62,7 +63,6 @@ scriptmode = False
 # Set up some useful variables
 #
 
-
 # The prefix to use for all output files
 prefix = '/data/dleung/DATA/VLA/15B-137/Imaging/J0939'
 
@@ -77,12 +77,6 @@ vis = "/data/dleung/DATA/VLA/15B-137/Imaging/3C220.3CAL.ms"
 # List a summary of the MS
 #
 print '--Listobs--'
-
-# Don't default this one and make use of the previous setting of
-# vis.  Remember, the variables are GLOBAL!
-
-# You may wish to see more detailed information, like the scans.
-# In this case use the verbose = True option
 verbose = True
 
 listobs()
@@ -253,7 +247,6 @@ specRes = 16.7656            # native spec. res. = 2 MHz
 #                              continuum (MODEL_DATA column)
 #
 # J0939.ms.contsub: uv-subtracted visibilities (DATA column) --> useful
-# J0939.ms.cont: pseudo-continuum visibilities (as fit). --> not useful
 #
 #
 # Probably want to fit through all spws (both basebands)
@@ -292,13 +285,9 @@ if scriptmode:
    user_check=raw_input('Return to continue script\n')
 
 uvcontsub()
-#
-# You will see it made two new MS (with want_cont=True):
-# <vis>.cont
-# <vis>.contsub
 
 # You will see it made a new MS ONLY (with want_cont=False):
-v# <vis>.contsub
+# <vis>.contsub
 
 splitms = vis + '.contsub'
 
@@ -395,14 +384,6 @@ interactive = True
 threshold = rms
 # Do a simple Clark clean
 psfmode = 'clark'
-
-
-# No Cotton-Schwab iterations
-# csclean = False
-# If desired, you can do a Cotton-Schwab clean
-# csclean = True
-# Twice as big for Cotton-Schwab (cleans inner quarter)
-#imsize = [512,512]
 
 # Set up the weighting
 # Use Briggs weighting (a moderate value, on the uniform side)
