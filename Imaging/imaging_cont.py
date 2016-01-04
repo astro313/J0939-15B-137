@@ -5,6 +5,7 @@
 # -----                                                                      #
 # - update flow chart                                                        #
 # - fix bug, put vis= after rmtable()                                        #
+# - try gridmode='widefield' in clean()                                      #
 #                                                                            #
 # Continuum imaging for SMM J0939+8315                                       #
 #                                                                            #

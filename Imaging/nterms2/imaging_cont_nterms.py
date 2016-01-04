@@ -5,6 +5,11 @@
 # Continuum imaging for SMM J0939+8315 with nterms=2, spectral index imaging #
 # Only performed across the full band                                        #
 #                                                                            #
+# TODO:                                                                      #
+# -----                                                                      #
+# - try gridemode='widefield'                                                #
+#                                                                            #
+#                                                                            #
 # Note:                                                                      #
 # ------                                                                     #
 # Expect image still dominated by error patterns from "mis-calibration".     #
