@@ -4,8 +4,8 @@
 # History:
 # 11 July 2016
 #       - change '34,52' to '34~52'
-#
-#
+#       - add export moment 0 to fits
+#       - update rms
 #                                                                            #
 # make moments maps for SMM J0939+8315                                       #
 #                                                                            #
@@ -32,6 +32,10 @@ prefix = '/data/dleung/DATA/VLA/15B-137/Imaging/J0939'
 # cleaned line cube CASA image
 imname = prefix + '.clean'
 clnimage = imname+'.image'
+
+box_on = '118,125,132,137'
+box_off = '26,15,232,110'
+
 #=====================================================================
 #
 # Get some image moments, do 0th and 1st+2nd separately
@@ -41,8 +45,7 @@ default('immoments')
 
 imagename = clnimage
 moments = [0]
-# linechan_FWHM = '68,107'      # for binning=1
-linechan_FWHM = '34~52'         # for binning=2 & eyeballing..
+linechan_FWHM = '34~52'
 chans = linechan_FWHM
 stokes = 'I'
 
@@ -58,6 +61,24 @@ if scriptmode:
     user_check = raw_input('Return to continue script\n')
 
 immoments()
+rms = imstat(imagename=outfile, box=box_off)['rms'][0]
+# 0.02252 Jy km/s / B
+peak = imstat(imagename=outfile, box=box_on)['max'][0]
+
+print peak/rms
+# SNR = 24.7
+
+imview(raster={'file': outfile,
+               'range': [-1.5e-4, peak],
+               'colormap': 'Rainbow 2', 'scaling': 0.0, 'colorwedge': True},
+       contour={'file': outfile,
+                'levels': [-6, -3, 3, 6, 9, 12, 15, 24],
+                'unit': rms},       # Jy/beam
+       zoom=3)
+#
+
+exportfits(imagename=outfile, fitsimage=outfile+ '.fits', overwrite=True)
+
 #
 #
 #
@@ -70,8 +91,8 @@ moments = [1, 2]
 stokes = 'I'
 
 # Need to mask out noisy pixels, 3*sigma
-rms = 1.2e-4
-upperlim = 3 * rms         # Jy
+rms = 1.2e-4              # noise per channel
+upperlim = 3 * rms        # Jy
 excludepix = [-100, upperlim]
 
 chans = linechan_FWHM
