@@ -1,5 +1,11 @@
 ##############################################################################
-# Last Modified: 17 Dec 2015                                                 #
+# Last Modified: 11 Jul 2016                                                 #
+#
+# History:
+# 11 July 2016
+#       - change '34,52' to '34~52'
+#
+#
 #                                                                            #
 # make moments maps for SMM J0939+8315                                       #
 #                                                                            #
@@ -36,7 +42,7 @@ default('immoments')
 imagename = clnimage
 moments = [0]
 # linechan_FWHM = '68,107'      # for binning=1
-linechan_FWHM = '34,52'         # for binning=2 & eyeballing..
+linechan_FWHM = '34~52'         # for binning=2 & eyeballing..
 chans = linechan_FWHM
 stokes = 'I'
 
